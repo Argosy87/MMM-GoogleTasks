@@ -2,7 +2,7 @@ Module.register("MMM-GoogleTasks",{
 	// Default module config.
 	defaults: {
 
-		listID: "N0dJbC1rUUI3WWxseE1KUA", // List ID (see authenticate.js)
+		listID: "", // List ID (see authenticate.js)
 		maxResults: 10,		
 		showCompleted: false, //set showCompleted and showHidden true
 		completeOnClick: true,
