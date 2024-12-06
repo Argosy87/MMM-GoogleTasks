@@ -70,6 +70,7 @@ module.exports = NodeHelper.create({
         }, (err, res) => {
             if (err) return console.error('The API returned an error: ' + err);
         });
+        this.getList(config);
     },
 
     reOpenTask: function (listId, taskId, config) {
@@ -88,6 +89,7 @@ module.exports = NodeHelper.create({
         }, (err, res) => {
             if (err) return console.error('The API returned an error: ' + err);
         });
+        this.getList(config);
     },
 
     startTasksService: function(auth, self) {
