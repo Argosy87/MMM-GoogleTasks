@@ -2,14 +2,14 @@ Module.register("MMM-GoogleTasks",{
 	// Default module config.
 	defaults: {
 
-		listID: "", // List ID (see authenticate.js)
+		listID: "N0dJbC1rUUI3WWxseE1KUA", // List ID (see authenticate.js)
 		maxResults: 10,		
 		showCompleted: false, //set showCompleted and showHidden true
-		completeOnClick: true, //set completeOnClick to update task on screen
-		ordering: "myorder", // Order by due date or by 'my order' NOT IMPLEMENTED
+		completeOnClick: true,
+		ordering: "position", // Order by due date or by 'position' NOT IMPLEMENTED
 		dateFormat: "MMM Do", // Format to display dates (moment.js formats)
 		updateInterval: 10000, // Time between content updates (millisconds)
-		animationSpeed: 2000, // Speed of the update animation (milliseconds)
+		animationSpeed: 1000, // Speed of the update animation (milliseconds)
 		tableClass: "small", // Name of the classes issued from main.css
 		
 		// Pointless for a mirror, not currently implemented
@@ -70,22 +70,22 @@ Module.register("MMM-GoogleTasks",{
 			self.loaded = true;
 			if (payload.items) {
 				self.tasks = payload.items;
-				self.updateDom(self.config.animationSpeed)
+				self.updateDom(self.config.animationSpeed);
 			} else {
 				self.tasks = null;
-				Log.info("No tasks found.")
-				self.updateDom(self.config.animationSpeed)
+				Log.info("No tasks found.");
+				self.updateDom(self.config.animationSpeed);
 			}
 		}
 	},
 
 	getDom: function() {
-
+		var self = this;
 		var wrapper = document.createElement('div');
 		wrapper.className = "container ";
 		wrapper.className += this.config.tableClass;
 
-		 var numTasks = Object.keys(this.tasks).length;
+		var numTasks = Object.keys(this.tasks).length;
 
 		if (!this.tasks) {
 			wrapper.innerHTML = (this.loaded) ? "EMPTY" : "LOADING";
@@ -99,29 +99,33 @@ Module.register("MMM-GoogleTasks",{
 
 			this.tasks.sort((a,b) => a.position - b.position)
 
-			this.tasks.forEach((task) => {
-				onclickfunction = "COMPLETE_TASK";
+			this.tasks.forEach((task) => {				
 				titleWrapper = document.createElement('div');
 				titleWrapper.className = "item title";
 				// If item is completed change icon to checkmark
 				if (task.status === 'completed') {
 					titleWrapper.innerHTML = "<i class=\"fa fa-check\" ></i><strike>" + task.title + "</strike>";
-					onclickfunction = "REOPEN_TASK";
-				} 
-				if (task.status === 'needsAction') {
+					if (self.config.completeOnClick) {
+						titleWrapper.onclick = function () {
+		    				self.sendSocketNotification("REOPEN_TASK",  {
+		              			listId: self.config.listID,
+		              			taskId: task.id,
+		              			config: self.config,
+		            		});
+						};
+					}	
+				} else {
 					titleWrapper.innerHTML = "<i class=\"fa fa-circle-thin\" ></i>" + task.title;
-					onclickfunction = "COMPLETE_TASK";
+					if (self.config.completeOnClick) {
+						titleWrapper.onclick = function () {
+		    				self.sendSocketNotification("COMPLETE_TASK",  {
+		              			listId: self.config.listID,
+		              			taskId: task.id,
+		              			config: self.config,
+		            		});
+						};
+					}
 				}
-
-				if (this.config.completeOnClick) {
-					titleWrapper.onclick = function () {
-	    				self.sendSocketNotification(onclickfunction,  {
-	              			listId: self.config.listID,
-	              			taskId: task.id,
-	              			config: self.config,
-	            		});
-					};
-				}	
 
 				if (task.parent) {
 					titleWrapper.className = "item child";
@@ -145,8 +149,9 @@ Module.register("MMM-GoogleTasks",{
 
 				wrapper.appendChild(titleWrapper);
 				wrapper.appendChild(dateWrapper);
-				
+
 			});
+
 
 			return wrapper;
 		}
