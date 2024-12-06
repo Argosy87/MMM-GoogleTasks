@@ -24,6 +24,10 @@ module.exports = NodeHelper.create({
             }
         } else if (notification === "REQUEST_UPDATE") {
             this.getList(payload);
+        } else if (notification === "COMPLETE_TASK") {
+            this.completeTask(payload.listId, payload.taskId, payload.config);
+        } else if (notification === "REOPEN_TASK") {
+            this.reOpenTask(payload.listId, payload.taskId, payload.config);
         }
     },
 
@@ -48,6 +52,42 @@ module.exports = NodeHelper.create({
               callback(self.oAuth2Client, self);
             });
         }
+    },
+
+    completeTask: function (listId, taskId, config) {
+        var self = this;
+
+        if(!self.service) {
+            console.log("Refresh required"); 
+            return;
+        }
+        self.service.tasks.patch({
+            task: taskId,
+            tasklist: listId,
+            requestBody: {
+                status: "completed"
+            }
+        }, (err, res) => {
+            if (err) return console.error('The API returned an error: ' + err);
+        });
+    },
+
+    reOpenTask: function (listId, taskId, config) {
+        var self = this;
+
+        if(!self.service) {
+            console.log("Refresh required"); 
+            return;
+        }
+        self.service.tasks.patch({
+            task: taskId,
+            tasklist: listId,
+            requestBody: {
+                status: "needsAction"
+            }
+        }, (err, res) => {
+            if (err) return console.error('The API returned an error: ' + err);
+        });
     },
 
     startTasksService: function(auth, self) {
