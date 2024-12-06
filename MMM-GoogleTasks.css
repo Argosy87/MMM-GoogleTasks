@@ -1,31 +1,45 @@
-  .MMM-GoogleTasks .container {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      transform: translateY(-.6em);
+.MMM-GoogleTasks .header {
+  font-size: 20px;
+  color:white;
+  padding: 35px;
+  line-height: unset !important;
+  border-bottom: 0px solid #dddddd;
+  text-shadow: 1px 1px 2px black;
+}
+
+.MMM-GoogleTasks .container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    transform: translateY(-.6em);
+    text-shadow: 1px 1px 2px black;
   }
 
   .MMM-GoogleTasks .item {
-      text-align: left;
-      padding-bottom: .25em;
-      }
+    text-align: left;
+    padding-bottom: .25em;
+    text-shadow: 1px 1px 2px black;
+  }
 
   /* .MMM-GoogleTasks .item.title {
   } */
 
   .MMM-GoogleTasks .item.date {
-      padding-left: 1.7em;
-      text-align: right;
+    padding-left: 1.7em;
+    text-align: right;
+    text-shadow: 1px 1px 2px black;
   }
 
   .MMM-GoogleTasks .item.notes {
-      padding-left: .95em;
-      font-size: 0.8em;
-      padding-bottom: 0;
+    padding-left: .95em;
+    font-size: 0.8em;
+    padding-bottom: 0;
+    text-shadow: 1px 1px 2px black;
   }
 
   .MMM-GoogleTasks .item.child {
-      text-align: left;
-      padding-left: 1.5em;
+    text-align: left;
+    padding-left: 1.5em;
+    text-shadow: 1px 1px 2px black;
   }
 
   .MMM-GoogleTasks .fa  {
@@ -33,4 +47,5 @@
     padding-bottom: .25em;
     padding-right: .25em;
     font-size: 0.60em;
+    text-shadow: 1px 1px 2px black;
   }
